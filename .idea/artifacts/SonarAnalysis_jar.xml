@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="SonarAnalysis:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/SonarAnalysis_jar</output-path>
+    <root id="archive" name="SonarAnalysis.jar">
+      <element id="module-output" name="SonarAnalysis" />
+      <element id="extracted-dir" path="$USER_HOME$/Desktop/topics/jsoup-1.10.2.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>
