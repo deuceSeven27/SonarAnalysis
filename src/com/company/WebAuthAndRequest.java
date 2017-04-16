@@ -42,8 +42,8 @@ public class WebAuthAndRequest {
             }
         }
         int responseCode = uc.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
+        System.out.println("Sending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode + "\n");
         BufferedReader in =
                 new BufferedReader(new InputStreamReader(uc.getInputStream()));
         String inputLine;
@@ -142,7 +142,7 @@ public class WebAuthAndRequest {
             response.append(inputLine);
         }
         in.close();
-        // System.out.println(response.toString());
+
     }
 
     public void setCookies(List<String> cookies) {

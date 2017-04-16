@@ -79,7 +79,7 @@ public class Main {
         MainHelper.createDirectory("./" + ASSIGNMENT + "/meta", "meta");
         //get the classList file
 
-        ArrayList<String> classList = clp.readAndParseClassList("./meta/students.csv");
+        ArrayList<String> classList = clp.readAndParseClassList("./" + ASSIGNMENT +  "/meta/students.csv");
         for (String s : classList){
             System.out.println(s);
         }
@@ -88,7 +88,10 @@ public class Main {
         MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets", "tarGets");
 
         //now make request for each student
+        int processCount = 1;
+
         for (String id : classList){
+            System.out.println("Processing " + processCount + "/" + classList.size() + ": " + id);
             //this gets to their feedback page
             String studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/?menu=" +
                     "View%20Feedback&sub_output_select=feedback&sub_alt_user=" + id);
@@ -101,19 +104,23 @@ public class Main {
             * */
             Elements revisions = d.select("a[href*=revision]");
 
-            for (Element e : revisions){
-                System.out.println(e.attr("href"));
+            //get revisions only if work has been submitted at all
+            if(revisions.size() > 0){
+                //select the latest revision
+                studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+
+                //finally download the source tar file
+
+                System.out.println("Downloading latest submission for " + id + "...");
+                URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
+                ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
+                FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + ".tgz");
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                System.out.println("Download succeeded!\n");
             }
 
-            //select the latest revision
-            studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+            processCount++;
 
-            //finally download the source tar file
-
-            URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
-            ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
-            FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + ".tgz");
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         }
 
     }
