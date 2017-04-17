@@ -76,13 +76,9 @@ public class Main {
         ClassListParser clp = new ClassListParser();
 
         //create meta directory
-        MainHelper.createDirectory("./" + ASSIGNMENT + "/meta", "meta");
-        //get the classList file
+        MainHelper.createDirectory("./" + ASSIGNMENT, ASSIGNMENT);
 
-        ArrayList<String> classList = clp.readAndParseClassList("./" + ASSIGNMENT +  "/meta/students.csv");
-        for (String s : classList){
-            System.out.println(s);
-        }
+        ArrayList<String> classList = clp.readAndParseClassList("./students.csv");
 
         //create tarGets directory
         MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets", "tarGets");
