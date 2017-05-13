@@ -17,6 +17,8 @@ import java.util.Scanner;
 
 public class Main {
 
+    //if args = ["test"], defaults, else
+    //must be fed in values
     public static void main(String[] args) throws Exception{
 
         String USERNAME = "";
@@ -26,7 +28,7 @@ public class Main {
         WebAuthAndRequest wr = new WebAuthAndRequest();
 
 
-        if(args.length > 0){
+        if(args[0].equals("test")){
             USERNAME = "a1675993";
             PASSWORD = "rajeshdurai27$$$";
             ASSIGNMENT = "pracexam1p1";
@@ -53,7 +55,7 @@ public class Main {
         }
 
 
-
+        //traversing the login page
         String loginPage = wr.getPage("https://login.adelaide.edu.au/cas/login" +
                 "?service=https%3A%2F%2Fmyuni.adelaide.edu.au%2Flogin%2Fcas");
 
