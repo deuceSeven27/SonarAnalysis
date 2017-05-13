@@ -5,7 +5,6 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import java.io.Console;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.net.CookieHandler;
@@ -30,7 +29,7 @@ public class Main {
         if(args.length > 0){
             USERNAME = "a1675993";
             PASSWORD = "rajeshdurai27$$$";
-            ASSIGNMENT = "pracexam1p2";
+            ASSIGNMENT = "pracexam1p1";
         }else{
             //get username
             Scanner sc = new Scanner(System.in);
@@ -79,7 +78,7 @@ public class Main {
         MainHelper.createDirectory("./" + ASSIGNMENT + "/meta", "meta");
         //get the classList file
 
-        ArrayList<String> classList = clp.readAndParseClassList("./meta/students.csv");
+        ArrayList<String> classList = clp.readAndParseClassList("./" + ASSIGNMENT + "/meta/students.csv");
         for (String s : classList){
             System.out.println(s);
         }
@@ -105,8 +104,13 @@ public class Main {
                 System.out.println(e.attr("href"));
             }
 
-            //select the latest revision
-            studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+            //select the latest revision if it exists
+            if(revisions.size() > 0){
+                studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+            }else{
+                System.out.println("No submission for " + id);
+            }
+
 
             //finally download the source tar file
 
