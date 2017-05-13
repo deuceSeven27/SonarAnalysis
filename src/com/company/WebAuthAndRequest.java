@@ -20,7 +20,6 @@ public class WebAuthAndRequest {
 
     private List<String> cookies;
     private HttpsURLConnection uc;
-
     private final String USER_AGENT = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/57.0.2987.98 Safari/537.36";
 
     /*gets the login page and acts like a browser*/
@@ -42,8 +41,8 @@ public class WebAuthAndRequest {
             }
         }
         int responseCode = uc.getResponseCode();
-        System.out.println("\nSending 'GET' request to URL : " + url);
-        System.out.println("Response Code : " + responseCode);
+        System.out.println("Sending 'GET' request to URL : " + url);
+        System.out.println("Response Code : " + responseCode + "\n");
         BufferedReader in =
                 new BufferedReader(new InputStreamReader(uc.getInputStream()));
         String inputLine;
@@ -99,6 +98,7 @@ public class WebAuthAndRequest {
         return cookies;
     }
 
+    //create the post request and send it
     public void sendPost(String url, String postParams) throws Exception{
         URL obj = new URL(url);
         uc = (HttpsURLConnection) obj.openConnection();
@@ -142,7 +142,7 @@ public class WebAuthAndRequest {
             response.append(inputLine);
         }
         in.close();
-        // System.out.println(response.toString());
+
     }
 
     public void setCookies(List<String> cookies) {
