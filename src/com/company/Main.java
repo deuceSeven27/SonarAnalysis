@@ -109,17 +109,18 @@ public class Main {
             //select the latest revision if it exists
             if(revisions.size() > 0){
                 studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+                //finally download the source tar file
+
+                URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
+                ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
+                FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + ".tgz");
+                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             }else{
                 System.out.println("No submission for " + id);
             }
 
 
-            //finally download the source tar file
 
-            URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
-            ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
-            FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + ".tgz");
-            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
         }
 
     }
