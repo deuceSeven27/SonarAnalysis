@@ -6,6 +6,7 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.net.CookieHandler;
 import java.net.CookieManager;
@@ -78,9 +79,19 @@ public class Main {
 
         //create meta directory
         MainHelper.createDirectory("./" + ASSIGNMENT + "/meta", "meta");
-        //get the classList file
+        //TODO: get the class list online
+        String csvPath = "./" + ASSIGNMENT + "/meta/students.csv";
 
-        ArrayList<String> classList = clp.readAndParseClassList("./" + ASSIGNMENT + "/meta/students.csv");
+        ArrayList<String> classList; // stores the id numbers of students
+
+        try{
+            classList = clp.readAndParseClassList(csvPath);
+        }catch(FileNotFoundException f){
+            //default to csv file we stored
+            System.out.println("No file at " + csvPath + ".\n" + "Using default file...\n");
+            classList = clp.readAndParseClassList("./students.csv");
+        }
+
         for (String s : classList){
             System.out.println(s);
         }
@@ -118,8 +129,6 @@ public class Main {
             }else{
                 System.out.println("No submission for " + id);
             }
-
-
 
         }
 
