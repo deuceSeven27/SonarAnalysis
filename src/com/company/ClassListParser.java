@@ -1,6 +1,8 @@
 package com.company;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.util.ArrayList;
 
@@ -14,9 +16,15 @@ public class ClassListParser {
     public ArrayList<String> classList = new ArrayList<String>();
 
     /*returns a list of student IDs to be parsed*/
-    public ArrayList<String> readAndParseClassList(String file){
+    public ArrayList<String> readAndParseClassList(String file) throws FileNotFoundException{
 
         String line;
+
+        File studentList = new File(file);
+
+        if(!studentList.exists()){
+           throw new FileNotFoundException();
+        }
 
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
 
