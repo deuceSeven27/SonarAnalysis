@@ -137,7 +137,7 @@ public class Main {
 
             //select the latest revision if it exists
             if(revisions.size() > 0){
-
+                System.out.println("Downloading for " + id + "...");
                 String revMark = MainHelper.getMark(revisions.get(0).text());
 
                 studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
