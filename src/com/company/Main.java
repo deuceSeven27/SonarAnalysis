@@ -114,19 +114,23 @@ public class Main {
             Elements revisions = d.select("a[href*=revision]");
 
             for (Element e : revisions){
-                System.out.println(e.attr("href"));
+                System.out.println(e.text());
+                System.out.println(e.attr("href") + "\n");
             }
+
+            String revMark = MainHelper.getMark(revisions.get(0).text());
 
             //select the latest revision if it exists
             if(revisions.size() > 0){
                 studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
                 //finally download the source tar file
-
+                // TODO: 14/05/17 Associate files with mark
                 URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
                 ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
-                FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + ".tgz");
+                FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + "_" + revMark + ".tgz");
                 fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
             }else{
+                // TODO: 14/05/17 keep track of non-submissions in a file?
                 System.out.println("No submission for " + id);
             }
 
@@ -145,6 +149,19 @@ public class Main {
                     System.out.println("Failed to create directory, or parent directories already created...");
                 }
             }
+        }
+        //gets the mark from the string showing the revision from websubmission
+        //text looks like Aug 20 10:55 r115(100)
+        public static String getMark(String text){
+            System.out.println("text is " + text);
+            StringBuilder sb = new StringBuilder(text);
+            int startBracket = sb.indexOf("(");
+            sb.delete(0, startBracket + 1);
+
+            int endBracket = sb.indexOf(")");
+            sb.deleteCharAt(endBracket);
+
+            return sb.toString();
         }
     }
 
