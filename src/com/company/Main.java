@@ -62,6 +62,8 @@ public class Main {
             }
         }*/
 
+
+
         downloadProject(USERNAME, PASSWORD, "pracexam1p2");
 
     }
@@ -131,10 +133,12 @@ public class Main {
                 System.out.println(e.attr("href") + "\n");
             }
 
-            String revMark = MainHelper.getMark(revisions.get(0).text());
+
 
             //select the latest revision if it exists
             if(revisions.size() > 0){
+
+                String revMark = MainHelper.getMark(revisions.get(0).text());
 
                 studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
 
