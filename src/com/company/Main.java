@@ -153,7 +153,7 @@ public class Main {
         //gets the mark from the string showing the revision from websubmission
         //text looks like Aug 20 10:55 r115(100)
         public static String getMark(String text){
-            System.out.println("text is " + text);
+
             StringBuilder sb = new StringBuilder(text);
             int startBracket = sb.indexOf("(");
             sb.delete(0, startBracket + 1);
