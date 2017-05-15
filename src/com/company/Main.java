@@ -18,43 +18,8 @@ import java.util.Scanner;
 
 public class Main {
 
-    //if args = ["test"], defaults, else
-    //must be fed in values
-    public static void main(String[] args) throws Exception{
-
-        String USERNAME = "";
-        String PASSWORD = "";
-        String ASSIGNMENT = "";
-
+    public static  void downloadProject(String USERNAME, String PASSWORD, String ASSIGNMENT) throws Exception{
         WebAuthAndRequest wr = new WebAuthAndRequest();
-
-
-        if(args[0].equals("test")){
-            USERNAME = "a1675993";
-            PASSWORD = "rajeshdurai27$$$";
-            ASSIGNMENT = "pracexam1p1";
-        }else{
-            //get username
-            Scanner sc = new Scanner(System.in);
-            System.out.println("Enter username: ");
-            USERNAME = sc.nextLine();
-            //get password, but don't display on screen
-            /*Console c;
-            char[] passwordChar;
-            //get the console to hide input
-            if(((c = System.console()) != null) && (passwordChar = c.readPassword("%s", "Password: ")) != null){
-                PASSWORD = passwordChar.toString();
-            }else{
-                System.out.println("No password entered! Exiting...");
-                System.exit(0);
-            }*/
-            System.out.println("Enter password: ");
-            PASSWORD = sc.nextLine();
-
-            System.out.println("Enter assignment php url: ");
-            ASSIGNMENT = sc.nextLine();
-        }
-
 
         //traversing the login page
         String loginPage = wr.getPage("https://login.adelaide.edu.au/cas/login" +
@@ -122,9 +87,10 @@ public class Main {
 
             //select the latest revision if it exists
             if(revisions.size() > 0){
+
                 studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+
                 //finally download the source tar file
-                // TODO: 14/05/17 Associate files with mark
                 URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
                 ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
                 FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + "_" + revMark + ".tgz");
@@ -135,6 +101,52 @@ public class Main {
             }
 
         }
+    }
+
+    //if args = ["test"], defaults, else
+    //must be fed in values
+    public static void main(String[] args) throws Exception{
+
+        String USERNAME = "";
+        String PASSWORD = "";
+        String ASSIGNMENT = "";
+
+
+        if(args[0].equals("test")){
+            USERNAME = "a1675993";
+            PASSWORD = "rajeshdurai27$$$";
+
+        }else{
+            //get username
+            Scanner sc = new Scanner(System.in);
+            System.out.println("Enter username: ");
+            USERNAME = sc.nextLine();
+            //get password, but don't display on screen
+            /*Console c;
+            char[] passwordChar;
+            //get the console to hide input
+            if(((c = System.console()) != null) && (passwordChar = c.readPassword("%s", "Password: ")) != null){
+                PASSWORD = passwordChar.toString();
+            }else{
+                System.out.println("No password entered! Exiting...");
+                System.exit(0);
+            }*/
+            System.out.println("Enter password: ");
+            PASSWORD = sc.nextLine();
+
+            System.out.println("Enter assignment php url: ");
+            ASSIGNMENT = sc.nextLine();
+        }
+
+        //run in loop or comment out and run individually
+        /*for(int exam = 1; exam < 4; exam++){
+            for(int question = 1; question < 4; question++){
+                ASSIGNMENT = "pracexam" + exam + "p" + question;
+                downloadProject(USERNAME, PASSWORD, ASSIGNMENT);
+            }
+        }*/
+
+        downloadProject(USERNAME, PASSWORD, "pracexam1p2");
 
     }
 
