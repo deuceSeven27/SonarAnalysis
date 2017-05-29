@@ -93,7 +93,7 @@ public class Main {
         ClassListParser clp = new ClassListParser();
 
         //create meta directory
-        MainHelper.createDirectory("./" + ASSIGNMENT + "/meta", "meta");
+        MainHelper.createDirectory("./" + ASSIGNMENT + "/meta");
         //TODO: get the class list online
         String csvPath = "./" + ASSIGNMENT + "/meta/students.csv";
 
@@ -112,7 +112,7 @@ public class Main {
         }
 
         //create tarGets directory
-        MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets", "tarGets");
+        MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets");
 
         //now make request for each student
         for (String id : classList){
@@ -133,20 +133,29 @@ public class Main {
                 System.out.println(e.attr("href") + "\n");
             }
 
-
-
-            //select the latest revision if it exists
+            // TODO: 5/29/2017 download all submissions rather than just most recent one
             if(revisions.size() > 0){
+                //make dir for this student
+                MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets/" + id);
+                int revNumber = revisions.size() - 1;
                 System.out.println("Downloading for " + id + "...");
-                String revMark = MainHelper.getMark(revisions.get(0).text());
+                for (Element e : revisions){
 
-                studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+                    /*for each submission, */
+                    System.out.println("Downloading revision " + e.text() + "...");
 
-                //finally download the source tar file
-                URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
-                ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
-                FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + "_" + revMark + ".tgz");
-                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                    String revMark = MainHelper.getMark(e.text());
+
+                    studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + e.attr("href"));
+
+                    //finally download the source tar file
+                    URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
+                    ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
+                    FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + "/" + id + "-" + revNumber + "_" + revMark + ".tgz");
+                    fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
+                    revNumber--;
+                }
+
             }else{
                 // TODO: 14/05/17 keep track of non-submissions in a file?
                 System.out.println("No submission for " + id);
@@ -156,12 +165,12 @@ public class Main {
     }
 
     private static class MainHelper{
-        public static void createDirectory(String path, String folderName){
+        public static void createDirectory(String path){
             File dest = new File(path);
             if(!dest.exists()){
-                System.out.println("Creating directory structure for " + folderName);
+                System.out.println("Creating directory structure for " + path);
                 if(dest.mkdirs()){
-                    System.out.println( folderName + " directory created.");
+                    System.out.println( path + " directory created.");
                 }else{
                     System.out.println("Failed to create directory, or parent directories already created...");
                 }
