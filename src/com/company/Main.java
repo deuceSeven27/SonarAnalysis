@@ -64,7 +64,7 @@ public class Main {
 
 
 
-        downloadProject(USERNAME, PASSWORD, "pracexam1p2");
+        downloadProject(USERNAME, PASSWORD, "pracexam2p3");
 
     }
 
@@ -114,7 +114,7 @@ public class Main {
         //create tarGets directory
         MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets");
 
-        int counter = 0;
+        int counter = 1;
         //now make request for each student
         for (String id : classList){
             //this gets to their feedback page
@@ -122,6 +122,8 @@ public class Main {
                     "View%20Feedback&sub_output_select=feedback&sub_alt_user=" + id);
             //then select the svn revision we need for that user
             Document d = Jsoup.parse(studentPage);
+            System.out.println("Downloading for " + id + "... (" + counter + "/" + classList.size() + ")");
+            counter++;
 
             /*
             select the revisions by targeting like
@@ -139,8 +141,6 @@ public class Main {
                 //make dir for this student
                 MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets/" + id);
                 int revNumber = revisions.size() - 1;
-                System.out.println("Downloading for " + id + "... (" + counter + "/" + classList.size() + ")");
-                counter++;
                 for (Element e : revisions){
 
                     /*for each submission, */
