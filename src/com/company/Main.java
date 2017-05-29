@@ -142,7 +142,7 @@ public class Main {
                 for (Element e : revisions){
 
                     /*for each submission, */
-                    System.out.println("Downloading revision " + e.text() + "...");
+                    System.out.println(id + ", (" + (revisions.size() - revNumber) + "/" + revisions.size() + ") : " + e.text() + "...");
 
                     String revMark = MainHelper.getMark(e.text());
 
