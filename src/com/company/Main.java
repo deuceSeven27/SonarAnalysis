@@ -114,6 +114,7 @@ public class Main {
         //create tarGets directory
         MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets");
 
+        int counter = 0;
         //now make request for each student
         for (String id : classList){
             //this gets to their feedback page
@@ -128,17 +129,18 @@ public class Main {
             * */
             Elements revisions = d.select("a[href*=revision]");
 
-            for (Element e : revisions){
+            /*for (Element e : revisions){
                 System.out.println(e.text());
                 System.out.println(e.attr("href") + "\n");
-            }
+            }*/
 
             // TODO: 5/29/2017 download all submissions rather than just most recent one
             if(revisions.size() > 0){
                 //make dir for this student
                 MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets/" + id);
                 int revNumber = revisions.size() - 1;
-                System.out.println("Downloading for " + id + "...");
+                System.out.println("Downloading for " + id + "... (" + counter + "/" + classList.size() + ")");
+                counter++;
                 for (Element e : revisions){
 
                     /*for each submission, */
@@ -168,7 +170,6 @@ public class Main {
         public static void createDirectory(String path){
             File dest = new File(path);
             if(!dest.exists()){
-                System.out.println("Creating directory structure for " + path);
                 if(dest.mkdirs()){
                     System.out.println( path + " directory created.");
                 }else{
