@@ -31,7 +31,7 @@ public class Main {
         String USERNAME = "a1675993";
         String PASSWORD = "rajeshdurai27$$$";
         String ASSIGNMENT = "assignment4";
-        String COURSE = "adds";
+        String COURSE = "adda"; //adds misspelled(?) as adda
         String SEMESTER = "s1";
         String YEAR = "2015";
 
@@ -68,9 +68,6 @@ public class Main {
         * */
         //get each student so we can make requests for their feedback pages
         ClassListParser clp = new ClassListParser();
-
-        //create meta directory
-        MainHelper.createDirectory("./" + ASSIGNMENT + "/meta", "meta");
 
         ArrayList<String> classList; // stores the id numbers of students
 
@@ -183,7 +180,6 @@ public class Main {
             //get the result from the rubbish by splitting on the word "Result"
                 try {
                     String uncleanedResult = outputText.split("Result:")[1].split("Feedback")[0];
-                    System.out.println("uncleanedResult is " + uncleanedResult);
                     String result = uncleanedResult.replaceAll("[\\sA-Za-z\\*\\.:]", "").replace("/", "-"); //for fileName output;
                     System.out.println("result is " + result);
                     return result;
