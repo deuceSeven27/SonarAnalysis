@@ -28,7 +28,7 @@ public class Main {
         String PASSWORD = "";
         //array of assignments
         String[] ASSIGNMENTS = {};
-        String[] questionsToSearchArr = {"barbeque" , "rgbstreet", "elevatorlimit", "tomekphone"};
+        String[] questionsToSearchArr = {"barbecue" , "rgbstreet", "elevatorlimit", "tomekphone"};
         ArrayList<String> questionsToSearch = new ArrayList<String>(Arrays.asList(questionsToSearchArr));
 
 
@@ -67,7 +67,7 @@ public class Main {
 
 
 
-        downloadProject(USERNAME, PASSWORD, "pracexam1p2", questionsToSearch);
+        downloadProject(USERNAME, PASSWORD, "week5practice", questionsToSearch);
 
     }
 
@@ -131,36 +131,35 @@ public class Main {
             * <a href="?sub_output_select=revision-279"> Aug 20 10:36 r279(100) </a>
             * */
             Elements revisions = d.select("a[href*=revision]");
+
+            if (revisions.size() < 1){
+                System.out.println("No submissions for " + id);
+                continue; //skip this student if no revisions
+            }
+
+            //go to that page with the latest revision
+            studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+
+            d = Jsoup.parse(studentPage);
+
             // TODO: 6/1/2017 Here we check the html table with marks
             // TODO to determine if they did that question
 
-            if(MainHelper.checkIfHtmlTableContains(d, questionsToSearch)){
+            String studentEntry = MainHelper.checkIfHtmlTableContains(d, questionsToSearch);
 
+            if(studentEntry == null){
+                System.out.println("No submissions for our questions for this student");
+                continue;
             }
 
-            for (Element e : revisions){
-                System.out.println(e.text());
-                System.out.println(e.attr("href") + "\n");
-            }
+            //now do the download for the student
+            System.out.println("Downloading for " + id + "...");
 
-
-
-            //select the latest revision if it exists
-            if(revisions.size() > 0){
-                System.out.println("Downloading for " + id + "...");
-                String revMark = MainHelper.getMark(revisions.get(0).text());
-
-                studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
-
-                //finally download the source tar file
-                URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
-                ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
-                FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + "_" + revMark + ".tgz");
-                fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
-            }else{
-                // TODO: 14/05/17 keep track of non-submissions in a file?
-                System.out.println("No submission for " + id);
-            }
+            //finally download the source tar file
+            URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
+            ReadableByteChannel rbc = Channels.newChannel(dlLink.openStream());
+            FileOutputStream fos = new FileOutputStream("./" + ASSIGNMENT + "/tarGets/" + id + "_" + studentEntry + ".tgz");
+            fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 
         }
     }
@@ -195,14 +194,44 @@ public class Main {
 
         //check if the html table on the websub feedback page
         //for the student has questions we are looking for
-        //if at least 1 looked for question is inside, then return true
-        public static boolean checkIfHtmlTableContains(Document htmlPage, ArrayList<String> questionLookingFor){
+        //if at least 1 looked for question is inside, then return
+        //a string, of the studentid,  name of the question, and the mark, with delimiters
+        // like axxxxxxx_(Socks-50_Elevator-20).tgz
+        public static String checkIfHtmlTableContains(Document htmlPage, ArrayList<String> questionLookingFor){
 
             //get the table element
+            Element marksTable = htmlPage.getElementsByTag("tbody").get(2);
+            /*if(marksTable.size() < 1){
+                System.out.println("no tables detected");
+                return null;
+            }*/
 
-            //check if the table has entries for the search for questions
 
-            return true;
+
+            Elements rows = marksTable.getElementsByTag("tr");
+
+            StringBuilder sb = new StringBuilder("");
+
+            //each element text() like "Barbecue 100"
+            for (int i = 1 /*skip the header row*/; i < rows.size(); i++ ){
+                System.out.println(rows.get(i).text());
+                String[] parts = rows.get(i).text().split("\\s+"); //split on whitespace
+
+                if( questionLookingFor.contains(parts[0].toLowerCase()) ){
+                    sb.append(parts[0] + "-" + parts[1] + "_");
+                }
+            }
+
+
+            if (sb.toString().equals("")){
+                System.out.println("Nothing detected");
+                return null; //return null if none found
+            }else{
+
+                sb.deleteCharAt(sb.length() - 1); //delete the last underscore _
+                return sb.toString();
+            }
+
 
         }
     }
