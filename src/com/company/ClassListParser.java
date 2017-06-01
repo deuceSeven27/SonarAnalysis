@@ -10,7 +10,9 @@ import java.util.ArrayList;
  * Created by rajeshdurai on 5/04/17.
  */
 /*feed this class the students.csv file from the websubmission classlist page
-* and it parses and returns an ArrayList with student ids*/
+* and it parses and returns an ArrayList with student ids
+* Custom for ADDS classlist file
+* */
 public class ClassListParser {
 
     public ArrayList<String> classList = new ArrayList<String>();
@@ -29,10 +31,17 @@ public class ClassListParser {
         try(BufferedReader br = new BufferedReader(new FileReader(file))){
 
             while((line = br.readLine()) != null){
-                String[] parts = line.split(",");
-                //don't include non-enrolments & lecturer code
-                if(!(parts[2].equals("\"0000_Submission - No Enrolment\""))){
-                    classList.add(parts[0]);
+                //get only the lines starting with the student id(which starts with a
+                //AND second char is a digit
+                if(!line.equals("")){
+                    if(line.charAt(0) == 'a' && Character.isDigit(line.charAt(1))){
+
+                        String[] parts = line.split(",");
+                        //don't include non-enrolments & lecturer code
+                        if(!(parts[2].equals("\"0000_Submission - No Enrolment\""))){
+                            classList.add(parts[0]);
+                        }
+                    }
                 }
 
             }

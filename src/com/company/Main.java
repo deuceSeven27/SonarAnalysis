@@ -30,9 +30,9 @@ public class Main {
 
         String USERNAME = "a1675993";
         String PASSWORD = "rajeshdurai27$$$";
-        String ASSIGNMENT = "assignment2";
-        String COURSE = "adsa";
-        String SEMESTER = "s2";
+        String ASSIGNMENT = "assignment4";
+        String COURSE = "adds";
+        String SEMESTER = "s1";
         String YEAR = "2015";
 
 
@@ -156,17 +156,22 @@ public class Main {
         /*
         * like:
          ....................................Omitted.................
-                    * *** Case  9  ***
-            Case hidden
-            Correct
+        Case 5
+        Case hidden
+        Correct
 
-            *** Case  10  ***
-            Case hidden
-            Correct
+        Case 6
+        Case hidden
+        Wrong
 
-            Result:  10 / 10
-            ******************************************************************************************************************
-            Web Submission Script Complete.
+        Result: 4 / 6
+
+        Feedback Template
+
+        Run: <?>:
+        Design: ?/2
+        Commenting/Style: ?/2
+        Functionality: 0/2
         * */
         public static String getMark(Document d){
 
@@ -177,8 +182,10 @@ public class Main {
 
             //get the result from the rubbish by splitting on the word "Result"
                 try {
-                    String uncleanedResult = outputText.split("Result")[1];
+                    String uncleanedResult = outputText.split("Result:")[1].split("Feedback")[0];
+                    System.out.println("uncleanedResult is " + uncleanedResult);
                     String result = uncleanedResult.replaceAll("[\\sA-Za-z\\*\\.:]", "").replace("/", "-"); //for fileName output;
+                    System.out.println("result is " + result);
                     return result;
                 }catch (ArrayIndexOutOfBoundsException e){
                     System.err.println("Something wrong with this student's test script output! getMark() returning null...");
