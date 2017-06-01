@@ -107,9 +107,13 @@ public class Main {
                 //select the latest revision if it exists
                 if(revisions.size() > 0){
                     System.out.println("Downloading for " + id + "...");
-                    String revMark = MainHelper.getMark(revisions.get(0).text());
 
+                    //this gets the latest revision
                     studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/" + revisions.get(0).attr("href"));
+
+                    //give the page to the getmark function
+                    d = Jsoup.parse(studentPage);
+                    String revMark = MainHelper.getMark(d);
 
                     //finally download the source tar file
                     URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
@@ -142,18 +146,35 @@ public class Main {
                 }
             }
         }
-        //gets the mark from the string showing the revision from websubmission
-        //text looks like Aug 20 10:55 r115(100)
-        public static String getMark(String text){
+        //for this adsa branch, get mark needs to parse the body of the
+        //testing output to get the mark
+        /*
+        * like:
+         ....................................Omitted.................
+                    * *** Case  9  ***
+            Case hidden
+            Correct
 
-            StringBuilder sb = new StringBuilder(text);
-            int startBracket = sb.indexOf("(");
-            sb.delete(0, startBracket + 1);
+            *** Case  10  ***
+            Case hidden
+            Correct
 
-            int endBracket = sb.indexOf(")");
-            sb.deleteCharAt(endBracket);
+            Result:  10 / 10
+            ******************************************************************************************************************
+            Web Submission Script Complete.
+        * */
+        public static String getMark(Document d){
 
-            return sb.toString();
+            Elements testOutput = d.getElementsByTag("pre");
+            //From observation, the last pre tag is the output
+            //here we get the output text
+            String outputText = testOutput.get(testOutput.size() - 1).text();
+
+            //get the result from the rubbish by splitting on the word "Result"
+            String uncleanedResult = outputText.split("Result")[1];
+            String result = uncleanedResult.replaceAll("[\\sA-Za-z\\*\\.:]", "").replace("/", "-"); //for fileName output;
+
+            return result;
         }
     }
 
