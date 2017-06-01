@@ -30,7 +30,7 @@ public class Main {
 
         String USERNAME = "a1675993";
         String PASSWORD = "rajeshdurai27$$$";
-        String ASSIGNMENT = "assignment4";
+        String ASSIGNMENT = "assignment10";
         String COURSE = "adda"; //adds misspelled(?) as adda
         String SEMESTER = "s1";
         String YEAR = "2015";
