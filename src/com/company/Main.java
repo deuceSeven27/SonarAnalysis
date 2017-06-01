@@ -114,6 +114,10 @@ public class Main {
                     //give the page to the getmark function
                     d = Jsoup.parse(studentPage);
                     String revMark = MainHelper.getMark(d);
+                    if(revMark == null){
+                        System.out.println("RevMark returned null...Skipping this student...");
+                        continue;
+                    }
 
                     //finally download the source tar file
                     URL dlLink = new URL("https://cs.adelaide.edu.au/services/websubmission/download.php?download_file=exported.tgz");
@@ -171,10 +175,14 @@ public class Main {
             String outputText = testOutput.get(testOutput.size() - 1).text();
 
             //get the result from the rubbish by splitting on the word "Result"
-            String uncleanedResult = outputText.split("Result")[1];
-            String result = uncleanedResult.replaceAll("[\\sA-Za-z\\*\\.:]", "").replace("/", "-"); //for fileName output;
-
-            return result;
+                try {
+                    String uncleanedResult = outputText.split("Result")[1];
+                    String result = uncleanedResult.replaceAll("[\\sA-Za-z\\*\\.:]", "").replace("/", "-"); //for fileName output;
+                    return result;
+                }catch (ArrayIndexOutOfBoundsException e){
+                    System.err.println("Something wrong with this student's test script output! getMark() returning null...");
+                    return null;
+                }
         }
     }
 
