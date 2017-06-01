@@ -30,7 +30,7 @@ public class Main {
 
         String USERNAME = "a1675993";
         String PASSWORD = "rajeshdurai27$$$";
-        String ASSIGNMENT = "assignment1";
+        String ASSIGNMENT = "assignment2";
         String COURSE = "adsa";
         String SEMESTER = "s2";
         String YEAR = "2015";
@@ -77,6 +77,7 @@ public class Main {
         try{
             classList = clp.readAndParseClassList(classListPath);
 
+            System.out.println("Printing classList: ");
             for(String student : classList){
                 System.out.println(student);
             }
