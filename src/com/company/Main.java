@@ -30,7 +30,7 @@ public class Main {
 
         String USERNAME = "a1675993";
         String PASSWORD = "rajeshdurai27$$$";
-        String ASSIGNMENT = "";
+        String ASSIGNMENT = "assignment1";
         String COURSE = "adsa";
         String SEMESTER = "s2";
         String YEAR = "2015";
@@ -77,6 +77,10 @@ public class Main {
         try{
             classList = clp.readAndParseClassList(classListPath);
 
+            for(String student : classList){
+                System.out.println(student);
+            }
+
             //create tarGets directory
             MainHelper.createDirectory("./" + ASSIGNMENT + "/tarGets", "tarGets");
 
@@ -119,7 +123,7 @@ public class Main {
 
             }
         }catch(FileNotFoundException f){
-            //default to csv file we stored
+
            f.printStackTrace();
            System.exit(1);
         }
