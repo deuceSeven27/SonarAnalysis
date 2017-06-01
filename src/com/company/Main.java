@@ -58,6 +58,7 @@ public class Main {
         }
 
         //run in loop or comment out and run individually
+        //bad idea for now, since response might fail
         /*for(int exam = 1; exam < 4; exam++){
             for(int question = 1; question < 4; question++){
                 ASSIGNMENT = "pracexam" + exam + "p" + question;
@@ -67,7 +68,7 @@ public class Main {
 
 
 
-        downloadProject(USERNAME, PASSWORD, "week5practice", questionsToSearch);
+        downloadProject(USERNAME, PASSWORD, "week11practice", questionsToSearch);
 
     }
 
@@ -201,15 +202,10 @@ public class Main {
 
             //get the table element
             Element marksTable = htmlPage.getElementsByTag("tbody").get(2);
-            /*if(marksTable.size() < 1){
-                System.out.println("no tables detected");
-                return null;
-            }*/
-
-
 
             Elements rows = marksTable.getElementsByTag("tr");
 
+            //build the response
             StringBuilder sb = new StringBuilder("");
 
             //each element text() like "Barbecue 100"
@@ -224,11 +220,12 @@ public class Main {
 
 
             if (sb.toString().equals("")){
-                System.out.println("Nothing detected");
+                System.out.println("No related questions detected");
                 return null; //return null if none found
             }else{
 
                 sb.deleteCharAt(sb.length() - 1); //delete the last underscore _
+                System.out.println("Found questions String -> " + sb.toString());
                 return sb.toString();
             }
 
