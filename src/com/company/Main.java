@@ -14,6 +14,7 @@ import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class Main {
@@ -25,7 +26,10 @@ public class Main {
 
         String USERNAME = "";
         String PASSWORD = "";
-        String ASSIGNMENT = "";
+        //array of assignments
+        String[] ASSIGNMENTS = {};
+        String[] questionsToSearchArr = {"barbeque" , "rgbstreet", "elevatorlimit", "tomekphone"};
+        ArrayList<String> questionsToSearch = new ArrayList<String>(Arrays.asList(questionsToSearchArr));
 
 
         if(args[0].equals("test")){
@@ -51,7 +55,6 @@ public class Main {
             PASSWORD = sc.nextLine();
 
             System.out.println("Enter assignment php url: ");
-            ASSIGNMENT = sc.nextLine();
         }
 
         //run in loop or comment out and run individually
@@ -64,11 +67,11 @@ public class Main {
 
 
 
-        downloadProject(USERNAME, PASSWORD, "pracexam1p2");
+        downloadProject(USERNAME, PASSWORD, "pracexam1p2", questionsToSearch);
 
     }
 
-    public static  void downloadProject(String USERNAME, String PASSWORD, String ASSIGNMENT) throws Exception{
+    public static  void downloadProject(String USERNAME, String PASSWORD, String ASSIGNMENT, ArrayList<String> questionsToSearch) throws Exception{
         WebAuthAndRequest wr = new WebAuthAndRequest();
 
         //traversing the login page
@@ -116,6 +119,7 @@ public class Main {
 
         //now make request for each student
         for (String id : classList){
+            // TODO: 6/1/2017 Here is where we check what they submitted and take questions we want
             //this gets to their feedback page
             String studentPage = wr.getPage("https://cs.adelaide.edu.au/services/websubmission/?menu=" +
                     "View%20Feedback&sub_output_select=feedback&sub_alt_user=" + id);
@@ -127,6 +131,12 @@ public class Main {
             * <a href="?sub_output_select=revision-279"> Aug 20 10:36 r279(100) </a>
             * */
             Elements revisions = d.select("a[href*=revision]");
+            // TODO: 6/1/2017 Here we check the html table with marks
+            // TODO to determine if they did that question
+
+            if(MainHelper.checkIfHtmlTableContains(d, questionsToSearch)){
+
+            }
 
             for (Element e : revisions){
                 System.out.println(e.text());
@@ -155,6 +165,8 @@ public class Main {
         }
     }
 
+
+
     private static class MainHelper{
         public static void createDirectory(String path, String folderName){
             File dest = new File(path);
@@ -180,6 +192,22 @@ public class Main {
 
             return sb.toString();
         }
+
+        //check if the html table on the websub feedback page
+        //for the student has questions we are looking for
+        //if at least 1 looked for question is inside, then return true
+        public static boolean checkIfHtmlTableContains(Document htmlPage, ArrayList<String> questionLookingFor){
+
+            //get the table element
+
+            //check if the table has entries for the search for questions
+
+            return true;
+
+        }
     }
+
+
+
 
 }
